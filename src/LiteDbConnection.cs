@@ -34,7 +34,13 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
                 db.Insert<T>(dto);
             }
         }
-
+        public override sealed void Insert<T>(IEnumerable<T> dtos)
+        {
+            using (var db = new LiteRepository(DbPath))
+            {
+                db.Insert<T>(dtos);
+            }
+        }
         public override sealed void Update<T>(IEnumerable<T> dtos)
         {
             using (var db = new LiteRepository(DbPath))
