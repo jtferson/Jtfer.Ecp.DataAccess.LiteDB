@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Jtfer.Ecp.DataAccess.asmdef.meta" />
+    <None Remove="Jtfer.Ecp.DataAccess.LiteDB.csproj.meta" />
+    <None Remove="package.json.meta" />
+    <None Remove="src.meta" />
+    <None Remove="src\LiteDbConnection.cs.meta" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LiteDB" Version="4.1.4" />
   </ItemGroup>
 
