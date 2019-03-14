@@ -11,9 +11,22 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
     {
         private Dictionary<string, Type> _mappedTypes = new Dictionary<string, Type>();
 
+        protected abstract bool Journal { get; }
+
+        private ConnectionString _connectionStringCache;
+        private ConnectionString _connectionString => _connectionStringCache = _connectionStringCache ?? GetConnectionString();
+        private ConnectionString GetConnectionString()
+        {
+            return new ConnectionString($"Filename={DbPath};Journal={Journal}");
+        }
+
+
         public override sealed IEnumerable<T> Get<T>()
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.ReadOnly;
+
+            using (var db = new LiteRepository(connection))
             {
                 return db.Fetch<T>();
             }
@@ -21,7 +34,10 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
 
         public override sealed IEnumerable<T> Get<T>(Expression<Func<T, bool>> query)
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.ReadOnly;
+
+            using (var db = new LiteRepository(connection))
             {
                 return db.Query<T>().Where(query).ToArray();
             }
@@ -29,21 +45,30 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
 
         public override sealed void Insert<T>(T dto)
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.Shared;
+
+            using (var db = new LiteRepository(connection))
             {
                 db.Insert<T>(dto);
             }
         }
         public override sealed void Insert<T>(IEnumerable<T> dtos)
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.Shared;
+
+            using (var db = new LiteRepository(connection))
             {
                 db.Insert<T>(dtos);
             }
         }
         public override sealed void Update<T>(IEnumerable<T> dtos)
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.Shared;
+
+            using (var db = new LiteRepository(connection))
             {
                 db.Update<T>(dtos);
             }
@@ -51,7 +76,10 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
 
         public override sealed bool Update<T>(T dto)
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.Shared;
+
+            using (var db = new LiteRepository(connection))
             {
                 return db.Update<T>(dto);
             }
@@ -59,7 +87,10 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
 
         public override sealed bool Upsert<T>(T dto)
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.Shared;
+
+            using (var db = new LiteRepository(connection))
             {
                 return db.Upsert<T>(dto);
             }
@@ -67,7 +98,10 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
 
         public override sealed bool Delete<T>(Guid id)
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.Shared;
+
+            using (var db = new LiteRepository(connection))
             {
                 return db.Delete<T>(id);
             }
@@ -75,7 +109,10 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
 
         public override sealed void DeleteAll<T>()
         {
-            using (var db = new LiteRepository(DbPath))
+            var connection = _connectionString;
+            connection.Mode = FileMode.Shared;
+
+            using (var db = new LiteRepository(connection))
             {
                 db.Database.DropCollection(typeof(T).Name);
                 //var ids = db.Fetch<T>().Select(q => q.Id);
