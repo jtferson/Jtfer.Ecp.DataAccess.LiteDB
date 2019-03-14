@@ -77,9 +77,10 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
         {
             using (var db = new LiteRepository(DbPath))
             {
-                var ids = db.Fetch<T>().Select(q => q.Id);
-                foreach (var id in ids)
-                    db.Delete<T>(id);
+                db.Database.DropCollection(typeof(T).Name);
+                //var ids = db.Fetch<T>().Select(q => q.Id);
+                //foreach (var id in ids)
+                //    db.Delete<T>(id);
             }
         }
 
