@@ -124,8 +124,8 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
 
         public override sealed void MapEntityToTable<T>()
         {
-            var mapper = BsonMapper.Global;
-            mapper.Entity<T>();
+            //var mapper = BsonMapper.Global;
+            //mapper.Entity<T>();
             _mappedTypes.Add(typeof(T).Name, typeof(T));
         }
 
