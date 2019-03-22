@@ -26,6 +26,8 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
             var connection = _connectionString;
             connection.Mode = FileMode.ReadOnly;
 
+
+
             using (var db = new LiteRepository(connection))
             {
                 return db.Fetch<T>();
@@ -124,8 +126,8 @@ namespace Jtfer.Ecp.DataAccess.LiteDB
 
         public override sealed void MapEntityToTable<T>()
         {
-            //var mapper = BsonMapper.Global;
-            //mapper.Entity<T>();
+            var mapper = BsonMapper.Global;
+            mapper.Entity<T>();
             _mappedTypes.Add(typeof(T).Name, typeof(T));
         }
 
